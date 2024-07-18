@@ -19,6 +19,5 @@ def main():
     import codecs
 
 
-
 if __name__ == "__main__":
     main()

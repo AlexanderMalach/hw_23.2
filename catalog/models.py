@@ -21,7 +21,7 @@ class Product(models.Model):
         help_text="Загрузите фото продукта",
     )
     category = models.ForeignKey(
-        'Category',
+        "Category",
         on_delete=models.SET_NULL,
         verbose_name="Категория",
         help_text="Введите название категории",
@@ -51,6 +51,7 @@ class Product(models.Model):
     def __str__(self):
         return self.name
 
+
 class Category(models.Model):
     name = models.CharField(
         max_length=100,
@@ -70,14 +71,3 @@ class Category(models.Model):
 
     def __str__(self):
         return self.name
-
-    # catalog/models.py
-    class Contact(models.Model):
-        name = models.CharField(max_length=100)
-        email = models.EmailField()
-        phone = models.CharField(max_length=20)
-        address = models.TextField()
-
-        def __str__(self):
-            return self.name
-

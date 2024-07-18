@@ -1,17 +1,24 @@
-# catalog/views.py
-from django.shortcuts import render
-
+from django.shortcuts import render, get_object_or_404
 from catalog.models import Product
 
 
-def index(request):
-    # Получаем последние пять товаров
-    latest_products = Product.objects.all().order_by('-created_at')[:5]
+def product_list(request):
+    products = Product.objects.all()
+    context = {"products": products}
+    return render(request, "product_list.html", context)
 
-    # Выводим последние пять товаров в консоль
-    for product in latest_products:
-        print(f'Product: {product.name}, Created at: {product.created_at}')
 
-    # Передаем последние пять товаров в контекст шаблона
-    context = {'latest_products': latest_products}
-    return render(request, 'catalog/index.html', context)
+def product_detail(request, pk):
+    product = get_object_or_404(Product, pk=pk)
+    context = {"product": product}
+    return render(request, "product_detail.html", context)
+
+
+def contacts(request):
+    if request.method == "POST":
+        name = request.POST.get("name")
+        phone = request.POST.get("phone")
+        message = request.POST.get("message")
+        print(f"{name} {phone} {message}")
+
+    return render(request, "contacts.html")
