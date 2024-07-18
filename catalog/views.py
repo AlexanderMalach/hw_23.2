@@ -1,16 +1,17 @@
-# from django.shortcuts import render
-#
-#
-# def render_home(request):
-#     return render(request, "home.html")
-#
-#
-# def render_contacts(request):
-#     if request.method == "POST":
-#         name = request.POST.get("name")
-#         phone = request.POST.get("phone")
-#         message = request.POST.get("message")
-#         print(
-#             f"Имя пользователя: {name}\nНомер телефона: {phone}\nСообщения от пользователя: {message}"
-#         )
-#     return render(request, "contacts.html")
+# catalog/views.py
+from django.shortcuts import render
+
+from catalog.models import Product
+
+
+def index(request):
+    # Получаем последние пять товаров
+    latest_products = Product.objects.all().order_by('-created_at')[:5]
+
+    # Выводим последние пять товаров в консоль
+    for product in latest_products:
+        print(f'Product: {product.name}, Created at: {product.created_at}')
+
+    # Передаем последние пять товаров в контекст шаблона
+    context = {'latest_products': latest_products}
+    return render(request, 'catalog/index.html', context)
