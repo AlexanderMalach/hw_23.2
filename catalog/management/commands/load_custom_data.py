@@ -56,10 +56,10 @@ class Command(BaseCommand):
                     name=product['fields']['name'],
                     description=product['fields']['description'],
                     price=product['fields']['price'],
-                    image=product.get('fields','').get('image', ''),  # обработка отсутствующего поля
+                    photo=product.get('fields','').get('photo', ''),  # обработка отсутствующего поля
                     created_at=product['fields']['created_at'],
                     updated_at=product['fields']['updated_at'],
-                    category=Category.objects.get(pk=product['fields']['category']),
+                    category=Category.objects.get(pk=category['pk']),
                 )
             )
 
