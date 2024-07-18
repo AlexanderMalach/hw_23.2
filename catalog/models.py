@@ -48,7 +48,8 @@ class Product(models.Model):
         verbose_name_plural = "Продукты"
         ordering = ["category", "name"]
 
-
+    def __str__(self):
+        return self.name
 
 class Category(models.Model):
     name = models.CharField(
