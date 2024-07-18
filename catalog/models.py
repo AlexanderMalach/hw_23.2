@@ -30,7 +30,7 @@ class Product(models.Model):
         related_name="products",
     )
 
-    price = models.DateField(
+    price = models.IntegerField(
         verbose_name="Цена за покупку",
         help_text="Введите цену продукта",
     )
