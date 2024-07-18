@@ -34,6 +34,14 @@ class Product(models.Model):
         verbose_name="Цена за покупку",
         help_text="Введите цену продукта",
     )
+    created_at = models.DateField(
+        verbose_name="Дата создания",
+        help_text="Введите дату создания",
+    )
+    updated_at = models.DateField(
+        verbose_name="Дата последнего изменения",
+        help_text="Введите дату последнего изменения",
+    )
 
     class Meta:
         verbose_name = "Продукт"
