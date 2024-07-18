@@ -17,6 +17,8 @@ class Migration(migrations.Migration):
                 default='2024-01-01',
                 help_text="Введите дату производства продукта",
                 verbose_name="Дата производства продукта",
+                blank=True,
+                null=True,
             ),
             preserve_default=False,
         ),
