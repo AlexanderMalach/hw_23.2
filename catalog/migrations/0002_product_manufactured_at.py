@@ -14,7 +14,7 @@ class Migration(migrations.Migration):
             model_name="product",
             name="manufactured_at",
             field=models.DateField(
-                default=0,
+                default='2024-01-01',
                 help_text="Введите дату производства продукта",
                 verbose_name="Дата производства продукта",
             ),
