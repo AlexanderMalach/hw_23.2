@@ -1,8 +1,8 @@
 import json
 import os
 
-from django.core.management import BaseCommand
 from django.conf import settings
+from django.core.management import BaseCommand
 
 from catalog.models import Product, Category
 
@@ -60,9 +60,7 @@ class Command(BaseCommand):
                     name=product["fields"]["name"],
                     description=product["fields"]["description"],
                     price=product["fields"]["price"],
-                    photo=product.get("fields", "").get(
-                        "photo", ""
-                    ),  # обработка отсутствующего поля
+                    photo=product['fields'].get("photo", ""),
                     created_at=product["fields"]["created_at"],
                     updated_at=product["fields"]["updated_at"],
                     category=Category.objects.get(pk=category["pk"]),

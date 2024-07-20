@@ -1,17 +1,12 @@
-<!-- catalog/templates/catalog/contacts.html -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Contact Us</title>
+    <title>Title</title>
 </head>
 <body>
-    <h1>Contact Us</h1>
-    {% for contact in contact_details %}
-        <h2>{{ contact.name }}</h2>
-        <p>Email: {{ contact.email }}</p>
-        <p>Phone: {{ contact.phone }}</p>
-        <p>Address: {{ contact.address }}</p>
-    {% endfor %}
+<form method="post">
+    {% 'csrf_token' %}
+</form>
 </body>
 </html>
