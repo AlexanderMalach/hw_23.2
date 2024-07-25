@@ -1,20 +1,11 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect, get_object_or_404
 
 from catalog.forms import ContactForm
 from catalog.models import Product, ContactInfo
-from django.shortcuts import render, redirect
+
 
 def render_home(request):
     return render(request, 'home.html')
-
-
-# def render_contacts(request):
-#     if request.method == 'POST':
-#         name = request.POST.get('name')
-#         phone = request.POST.get('phone')
-#         message = request.POST.get('message')
-#         print(f"Имя пользователя: {name}\nНомер телефона: {phone}\nСообщения от пользователя: {message}")
-#     return render(request, 'contacts.html')
 
 
 def render_contacts(request):
@@ -22,16 +13,6 @@ def render_contacts(request):
     for product in latest_products:
         print(product)
     return render(request, 'contacts.html', {'latest_products': latest_products})
-
-
-# def contact_page(request):
-#     contacts = ContactInfo.objects.all()
-#     if request.method == 'POST':
-#         name = request.POST.get('name')
-#         phone = request.POST.get('phone')
-#         message = request.POST.get('message')
-#         print(f"Имя пользователя: {name}\nНомер телефона: {phone}\nСообщения от пользователя: {message}")
-#     return render(request, 'contacts/contact_page.html', {'contacts': contacts})
 
 
 def contact_page(request):
@@ -45,3 +26,19 @@ def contact_page(request):
 
     contacts = ContactInfo.objects.all()
     return render(request, 'contacts/contact_page.html', {'form': form, 'contacts': contacts})
+
+
+# def render_base(request):
+#     return render(request, 'base.html')
+
+
+def render_base(request):
+    products = Product.objects.all()
+    context = {'products': products}
+    return render(request, 'product_list.html', context)
+
+
+def product_ditail(request, pk):
+    product = get_object_or_404(Product, pk=pk)
+    context1 = {'product': product}
+    return render(request, 'product_ditail.html', context1)
