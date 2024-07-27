@@ -6,5 +6,4 @@ from catalog.models import ContactInfo
 class ContactForm(forms.ModelForm):
     class Meta:
         model = ContactInfo
-        fields = ['name', 'phone', 'message']
-
+        fields = ["name", "phone", "message"]

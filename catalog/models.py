@@ -41,9 +41,11 @@ class Product(models.Model):
         verbose_name="Дата последнего изменения",
         help_text="Введите дату последнего изменения",
     )
-    views_counter = models.PositiveIntegerField(default=0,
-        verbose_name = "Счётчик просмотров",
-        help_text = "Укажите количество просмотров",)
+    views_counter = models.PositiveIntegerField(
+        default=0,
+        verbose_name="Счётчик просмотров",
+        help_text="Укажите количество просмотров",
+    )
 
     class Meta:
         verbose_name = "Продукт"
@@ -86,11 +88,25 @@ class ContactInfo(models.Model):
 
 
 class Blog(models.Model):
-    title = models.CharField(max_length=200)
+    title = models.CharField(max_length=200, verbose_name="Заголовок")
     slog = models.SlugField(max_length=50)
-    content = models.TextField()
-    preview = models.ImageField(upload_to='catalog/photo')
-    date_creation = models.DateTimeField()
-    publication_sign = models.BooleanField()
-    views_counter = models.PositiveIntegerField(default=0)
+    content = models.TextField(verbose_name="Содержание")
+    preview = models.ImageField(
+        upload_to="catalog/photo",
+        blank=True,
+        null=True,
+        verbose_name="Фото",
+        help_text="Загрузите фото продукта",
+    )
+    date_creation = models.DateTimeField(verbose_name='Дата создания', auto_now_add=True)
+    publication_sign = models.BooleanField(verbose_name='Опубликовано?', default=False)
+    views_counter = models.PositiveIntegerField(
+        default=0,
+        verbose_name="Счётчик просмотров",
+        help_text="Укажите количество просмотров",
+    )
 
+    class Meta:
+        verbose_name = "Блог"
+        verbose_name_plural = "Блоги"
+        ordering = ['publication_sign', '-date_creation']

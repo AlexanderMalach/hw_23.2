@@ -60,7 +60,7 @@ class Command(BaseCommand):
                     name=product["fields"]["name"],
                     description=product["fields"]["description"],
                     price=product["fields"]["price"],
-                    photo=product['fields'].get("photo", ""),
+                    photo=product["fields"].get("photo", ""),
                     created_at=product["fields"]["created_at"],
                     updated_at=product["fields"]["updated_at"],
                     category=Category.objects.get(pk=category["pk"]),
