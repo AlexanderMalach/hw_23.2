@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from catalog.models import Product, Category, ContactInfo
+from catalog.models import Product, Category, ContactInfo, Blog
 
 
 @admin.register(Product)
@@ -31,5 +31,7 @@ class ContactInfoAdmin(admin.ModelAdmin):
         "message",
     )
 
+
+@admin.register(Blog)
 class BlogAdmin(admin.ModelAdmin):
-    list_display = ("title", "author", "publish_date", 'views_counter')
+    list_display = ("title", 'content', "date_creation", 'publication_sign')

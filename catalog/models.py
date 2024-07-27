@@ -98,7 +98,7 @@ class Blog(models.Model):
         verbose_name="Фото",
         help_text="Загрузите фото продукта",
     )
-    date_creation = models.DateTimeField(verbose_name='Дата создания', auto_now_add=True)
+    date_creation = models.DateTimeField(verbose_name='Дата создания')
     publication_sign = models.BooleanField(verbose_name='Опубликовано?', default=False)
     views_counter = models.PositiveIntegerField(
         default=0,

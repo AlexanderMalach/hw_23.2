@@ -7,6 +7,11 @@ from catalog.views import (
     ProductCreateView,
     ProductUpdateView,
     ProductDeleteView,
+    BlogListView,
+    BlogDeleteView,
+    BlogUpdateView,
+    BlogCreateView,
+    BlogDetailView
 )
 
 app_name = NewappConfig.name
@@ -22,5 +27,14 @@ urlpatterns = [  # path('', render_home, name='home'),
     ),
     path(
         "catalog/<int:pk>/delete/", ProductDeleteView.as_view(), name="product_delete"
+    ),
+    path("blog", BlogListView.as_view(), name="blog_list"),
+    path("blog/<int:pk>/", BlogDetailView.as_view(), name="blog_detail"),
+    path("blog/create/", BlogCreateView.as_view(), name="blog_create"),
+    path(
+        "blog/<int:pk>/update/", BlogUpdateView.as_view(), name="blog_update"
+    ),
+    path(
+        "blog/<int:pk>/delete/", BlogDeleteView.as_view(), name="blog_delete"
     ),
 ]

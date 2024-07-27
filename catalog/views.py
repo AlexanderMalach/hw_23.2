@@ -9,7 +9,7 @@ from django.views.generic import (
 )
 
 from catalog.forms import ContactForm
-from catalog.models import Product, ContactInfo
+from catalog.models import Product, ContactInfo, Blog
 
 
 def render_home(request):
@@ -47,15 +47,16 @@ def contact_page(request):
 #     context = {'products': products}
 #     return render(request, 'product_list.html', context)
 
+# def product_ditail(request, pk):
+#     product = get_object_or_404(Product, pk=pk)
+#     context1 = {'product': product}
+#     return render(request, 'product_detail.html', context1)
+
 
 class ProductListView(ListView):
     model = Product
 
 
-# def product_ditail(request, pk):
-#     product = get_object_or_404(Product, pk=pk)
-#     context1 = {'product': product}
-#     return render(request, 'product_detail.html', context1)
 
 
 class ProductDetailView(DetailView):
@@ -102,3 +103,52 @@ class ProductUpdateView(UpdateView):
 class ProductDeleteView(DeleteView):
     model = Product
     success_url = reverse_lazy("catalog:catalog_list")
+
+
+class BlogListView(ListView):
+    model = Blog
+
+
+class BlogDetailView(DetailView):
+    model = Blog
+
+    def get_object(self, queryset=None):
+        self.object = super().get_object(queryset)
+        self.object.views_counter += 1
+        self.object.save()
+        return self.object
+
+
+class BlogCreateView(CreateView):
+    model = Blog
+    fields = (
+        "title",
+        "slog",
+        "content",
+        "preview",
+        "date_creation",
+        "publication_sign",
+    )
+    success_url = reverse_lazy("catalog:blog_list")
+
+
+class BlogUpdateView(UpdateView):
+    model = Blog
+    fields = (
+        "title",
+        "slog",
+        "content",
+        "preview",
+        "date_creation",
+        "publication_sign",
+    )
+    success_url = reverse_lazy("catalog:blog_list")
+
+
+    def get_success_url(self):
+        return reverse_lazy("catalog:blog_detail", args=[self.kwargs.get("pk")])
+
+
+class BlogDeleteView(DeleteView):
+    model = Blog
+    success_url = reverse_lazy("catalog:blog_list")
