@@ -11,7 +11,6 @@ class Product(models.Model):
         blank=True,
         null=True,
         verbose_name="Описание продукта",
-        help_text="Введите описание продукта",
     )
     photo = models.ImageField(
         upload_to="catalog/photo",
@@ -42,6 +41,9 @@ class Product(models.Model):
         verbose_name="Дата последнего изменения",
         help_text="Введите дату последнего изменения",
     )
+    views_counter = models.PositiveIntegerField(default=0,
+        verbose_name = "Счётчик просмотров",
+        help_text = "Укажите количество просмотров",)
 
     class Meta:
         verbose_name = "Продукт"
@@ -62,7 +64,6 @@ class Category(models.Model):
         blank=True,
         null=True,
         verbose_name="Описание категории",
-        help_text="Введите описание категории",
     )
 
     class Meta:
@@ -73,7 +74,6 @@ class Category(models.Model):
         return self.name
 
     # в вашем приложении (например, contacts) в файле models.py
-    from django.db import models
 
 
 class ContactInfo(models.Model):
@@ -83,3 +83,14 @@ class ContactInfo(models.Model):
 
     def __str__(self):
         return self.name
+
+
+class Blog(models.Model):
+    title = models.CharField(max_length=200)
+    slog = models.SlugField(max_length=50)
+    content = models.TextField()
+    preview = models.ImageField(upload_to='catalog/photo')
+    date_creation = models.DateTimeField()
+    publication_sign = models.BooleanField()
+    views_counter = models.PositiveIntegerField(default=0)
+
