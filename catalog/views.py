@@ -1,5 +1,6 @@
 from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
+from django.utils.text import slugify
 from django.views.generic import (
     ListView,
     DetailView,
@@ -57,8 +58,6 @@ class ProductListView(ListView):
     model = Product
 
 
-
-
 class ProductDetailView(DetailView):
     model = Product
 
@@ -108,6 +107,9 @@ class ProductDeleteView(DeleteView):
 class BlogListView(ListView):
     model = Blog
 
+    def get_queryset(self):
+        return Blog.objects.filter(publication_sign=True)
+
 
 class BlogDetailView(DetailView):
     model = Blog
@@ -123,27 +125,32 @@ class BlogCreateView(CreateView):
     model = Blog
     fields = (
         "title",
-        "slog",
         "content",
         "preview",
         "date_creation",
         "publication_sign",
     )
     success_url = reverse_lazy("catalog:blog_list")
+
+    def form_valid(self, form):
+        if form.is_valid():
+            new_blog = form.save(commit=False)
+            new_blog.slug = slugify(new_blog.title)
+            new_blog.save()
+        return super().form_valid(form)
 
 
 class BlogUpdateView(UpdateView):
     model = Blog
     fields = (
         "title",
-        "slog",
+        "slug",
         "content",
         "preview",
         "date_creation",
         "publication_sign",
     )
     success_url = reverse_lazy("catalog:blog_list")
-
 
     def get_success_url(self):
         return reverse_lazy("catalog:blog_detail", args=[self.kwargs.get("pk")])

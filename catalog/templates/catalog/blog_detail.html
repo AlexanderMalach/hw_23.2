@@ -6,7 +6,7 @@
         <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
             <div class="col">
                 <div class="card shadow-sm">
-                    <img src="{{ blog.prewie | media_filter}}">
+                    <img src="{{ blog.preview | media_filter}}">
                     <div class="card-body">
                         <p class="card-text">Заголовок: {{object.title}}</p>
                         <p class="card-text">Содержание: {{object.content | truncate_chars:100}}</p>
