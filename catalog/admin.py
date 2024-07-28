@@ -42,7 +42,5 @@ class VersionAdmin(admin.ModelAdmin):
     list_display = (
         "id",
         "version_number",
-        'version_name',
+        "version_name",
     )
-
-

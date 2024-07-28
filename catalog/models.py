@@ -149,10 +149,10 @@ class Version(models.Model):
     indication_current_version = models.BooleanField(
         verbose_name="Признак текущей версии.",
         help_text="Введите признак текущей версии",
-        default=False
+        default=False,
     )
 
     class Meta:
         verbose_name = "Версия продукта"
         verbose_name_plural = "Версии продуктов"
-        ordering = ["indication_current_version", 'version_number']
+        ordering = ["indication_current_version", "version_number"]
