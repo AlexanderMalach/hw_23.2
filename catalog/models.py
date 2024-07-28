@@ -125,3 +125,34 @@ class Blog(models.Model):
         verbose_name = "Блог"
         verbose_name_plural = "Блоги"
         ordering = ["publication_sign", "-date_creation"]
+
+
+class Version(models.Model):
+    product = models.ForeignKey(
+        Product,
+        related_name="versions",
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        verbose_name="Продукт",
+    )
+    version_number = models.PositiveIntegerField(
+        verbose_name="Номер версии",
+        help_text="Введите номер версии",
+    )
+    version_name = models.CharField(
+        verbose_name="Название версии",
+        help_text="Введите название версии",
+        blank=True,
+        null=True,
+    )
+    indication_current_version = models.BooleanField(
+        verbose_name="Признак текущей версии.",
+        help_text="Введите признак текущей версии",
+        default=False
+    )
+
+    class Meta:
+        verbose_name = "Версия продукта"
+        verbose_name_plural = "Версии продуктов"
+        ordering = ["indication_current_version", 'version_number']

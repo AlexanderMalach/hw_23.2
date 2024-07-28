@@ -1,16 +1,11 @@
-from django.shortcuts import render, redirect
+from django.forms import inlineformset_factory
+from django.shortcuts import render
 from django.urls import reverse_lazy
 from django.utils.text import slugify
-from django.views.generic import (
-    ListView,
-    DetailView,
-    CreateView,
-    UpdateView,
-    DeleteView,
-)
+from django.views.generic import (ListView, DetailView, CreateView, UpdateView, DeleteView, )
 
-from catalog.forms import ContactForm
-from catalog.models import Product, ContactInfo, Blog
+from catalog.forms import ProductForm, VersionForm
+from catalog.models import Product, Blog, Version
 
 
 def render_home(request):
@@ -24,38 +19,20 @@ def render_contacts(request):
     return render(request, "contacts.html", {"latest_products": latest_products})
 
 
-def contact_page(request):
-    if request.method == "POST":
-        form = ContactForm(request.POST)
-        if form.is_valid():
-            form.save()  # Сохранение данных в базу данных
-            return redirect("contact_page")  # Перенаправление после сохранения
-    else:
-        form = ContactForm()
-
-    contacts = ContactInfo.objects.all()
-    return render(
-        request, "contacts/contact_page.html", {"form": form, "contacts": contacts}
-    )
-
-
-# def render_base(request):
-#     return render(request, 'base.html')
-
-
-# def render_base(request):
-#     products = Product.objects.all()
-#     context = {'products': products}
-#     return render(request, 'product_list.html', context)
-
-# def product_ditail(request, pk):
-#     product = get_object_or_404(Product, pk=pk)
-#     context1 = {'product': product}
-#     return render(request, 'product_detail.html', context1)
-
-
 class ProductListView(ListView):
     model = Product
+
+    def get_context_data(self, **kwargs):
+        context_data = super().get_context_data(**kwargs)
+        products = context_data['object_list']
+
+        for product in products:
+            active_version = product.versions.filter(indication_current_version=True).first()
+            if active_version:
+                product.active_version = active_version
+
+        return context_data
+
 
 
 class ProductDetailView(DetailView):
@@ -70,33 +47,36 @@ class ProductDetailView(DetailView):
 
 class ProductCreateView(CreateView):
     model = Product
-    fields = (
-        "name",
-        "description",
-        "photo",
-        "category",
-        "price",
-        "created_at",
-        "updated_at",
-    )
+    form_class = ProductForm
     success_url = reverse_lazy("catalog:catalog_list")
 
 
 class ProductUpdateView(UpdateView):
     model = Product
-    fields = (
-        "name",
-        "description",
-        "photo",
-        "category",
-        "price",
-        "created_at",
-        "updated_at",
-    )
+    form_class = ProductForm
     success_url = reverse_lazy("catalog:catalog_list")
 
     def get_success_url(self):
         return reverse_lazy("catalog:product_detail", args=[self.kwargs.get("pk")])
+
+    def get_context_data(self, **kwargs):
+        context_data = super().get_context_data(**kwargs)
+        VersionFormset = inlineformset_factory(Product, Version, VersionForm, extra=1)
+        if self.request.method == "POST":
+            context_data["formset"] = VersionFormset(self.request.POST, instance=self.object)
+        else:
+            context_data["formset"] = VersionFormset(instance=self.object)
+        return context_data
+    def form_valid(self, form):
+        context_data = self.get_context_data()
+        formset = context_data["formset"]
+        if form.is_valid() and formset.is_valid():
+            self.object = form.save()
+            formset.instance = self.object
+            formset.save()
+            return super().form_valid(form)
+        else:
+            return self.render_to_response(self.get_context_data(form=form, formset=formset))
 
 
 class ProductDeleteView(DeleteView):
@@ -123,13 +103,7 @@ class BlogDetailView(DetailView):
 
 class BlogCreateView(CreateView):
     model = Blog
-    fields = (
-        "title",
-        "content",
-        "preview",
-        "date_creation",
-        "publication_sign",
-    )
+    fields = ("title", "content", "preview", "date_creation", "publication_sign",)
     success_url = reverse_lazy("catalog:blog_list")
 
     def form_valid(self, form):
@@ -142,14 +116,7 @@ class BlogCreateView(CreateView):
 
 class BlogUpdateView(UpdateView):
     model = Blog
-    fields = (
-        "title",
-        "slug",
-        "content",
-        "preview",
-        "date_creation",
-        "publication_sign",
-    )
+    fields = ("title", "slug", "content", "preview", "date_creation", "publication_sign",)
     success_url = reverse_lazy("catalog:blog_list")
 
     def get_success_url(self):
