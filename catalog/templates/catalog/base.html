@@ -189,11 +189,14 @@
             <div class="col-lg-6 col-md-8 mx-auto">
                 <h1 class="fw-light">Каталог</h1>
                 <p class="lead text-body-secondary"> Магазин товаров</p>
+                {% if user.is_authenticated %}
                 <p>
-                    <a class="btn btn-primary" href="{% url 'catalog:product_create' %}" role="button">Создать
-                        продукт</a>
+                    <a class="btn btn-primary" href="{% url 'catalog:product_create' %}" role="button">
+                        Создать продукт</a>
+                    {% endif %}
                     <a class="btn btn-primary" href="{% url 'catalog:blog_list' %}" role="button"> Блог</a>
                 </p>
+
             </div>
         </div>
     </section>

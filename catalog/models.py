@@ -2,6 +2,8 @@ from django.db import models
 from django.urls import reverse
 from django.utils.text import slugify
 
+from users.models import User
+
 
 class Product(models.Model):
     name = models.CharField(
@@ -47,6 +49,9 @@ class Product(models.Model):
         default=0,
         verbose_name="Счётчик просмотров",
         help_text="Укажите количество просмотров",
+    )
+    owner = models.ForeignKey(
+        User, verbose_name="Создатель", blank=True, null=True, on_delete=models.SET_NULL
     )
 
     class Meta:

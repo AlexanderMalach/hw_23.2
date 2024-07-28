@@ -1,3 +1,4 @@
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.forms import inlineformset_factory
 from django.shortcuts import render
 from django.urls import reverse_lazy, reverse
@@ -52,10 +53,17 @@ class ProductDetailView(DetailView):
         return self.object
 
 
-class ProductCreateView(CreateView):
+class ProductCreateView(CreateView, LoginRequiredMixin):
     model = Product
     form_class = ProductForm
     success_url = reverse_lazy("catalog:catalog_list")
+
+    def form_valid(self, form):
+        product = form.save()
+        user = self.request.user
+        product.owner = user
+        product.save()
+        return super().form_valid(form)
 
 
 class ProductUpdateView(UpdateView):
@@ -136,7 +144,6 @@ class BlogUpdateView(UpdateView):
     model = Blog
     fields = (
         "title",
-        "slug",
         "content",
         "preview",
         "date_creation",
@@ -145,7 +152,10 @@ class BlogUpdateView(UpdateView):
     success_url = reverse_lazy("catalog:blog_list")
 
     def get_success_url(self):
-        return reverse('catalog:blog_detail', kwargs={'pk': self.object.pk, 'slug': self.object.slug})
+        return reverse(
+            "catalog:blog_detail",
+            kwargs={"pk": self.object.pk, "slug": self.object.slug},
+        )
 
 
 class BlogDeleteView(DeleteView):
