@@ -5,7 +5,7 @@
 ## Установка
 
 1. **Клонируйте репозиторий:**
-     https://github.com/AlexanderMalach/hw_22.1
+     https://github.com/AlexanderMalach/hw_22.2
 
 2. **Создайте виртуальное окружение и активируйте его:**
     ```sh
