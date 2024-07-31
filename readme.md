@@ -5,13 +5,13 @@
 ## Установка
 
 1. **Клонируйте репозиторий:**
-     https://github.com/AlexanderMalach/hw_22.2 
+     https://github.com/AlexanderMalach/hw_22.2
 
 2. **Создайте виртуальное окружение и активируйте его:**
     ```sh
     poetry init
     poetry install
-    poetry shel
+    poetry shell
     ```
 
 ### Запуск проекта:
