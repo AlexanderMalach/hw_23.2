@@ -53,12 +53,17 @@ class ProductDetailView(DetailView):
 
     def get_object(self, queryset=None):
         self.object = super().get_object(queryset)
-        if self.request.user == self.object.owner:
-            self.object.views_counter += 1
-            self.object.save()
-            return self.object
-        raise PermissionDenied
+        self.object.views_counter += 1
+        self.object.save()
+        return self.object
 
+    # def get_object(self, queryset=None):
+    #     self.object = super().get_object(queryset)
+    #     if self.request.user == self.object.owner: # Можно убрать, так как это нужно только для примера
+    #         self.object.views_counter += 1
+    #         self.object.save()
+    #         return self.object
+    #     raise PermissionDenied# Можно убрать, так как это нужно только для примера
 
 
 class ProductCreateView(CreateView, LoginRequiredMixin):
