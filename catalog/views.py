@@ -1,5 +1,7 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.core.exceptions import PermissionDenied
 from django.forms import inlineformset_factory
+from django.http import HttpResponseForbidden
 from django.shortcuts import render
 from django.urls import reverse_lazy, reverse
 from django.utils.text import slugify
@@ -11,7 +13,7 @@ from django.views.generic import (
     DeleteView,
 )
 
-from catalog.forms import ProductForm, VersionForm
+from catalog.forms import ProductForm, VersionForm, ProductModeratorForm
 from catalog.models import Product, Blog, Version
 
 
@@ -28,6 +30,9 @@ def render_contacts(request):
 
 class ProductListView(ListView):
     model = Product
+
+    def get_queryset(self):
+        return Product.objects.filter(publication_sign=True)
 
     def get_context_data(self, **kwargs):
         context_data = super().get_context_data(**kwargs)
@@ -48,9 +53,12 @@ class ProductDetailView(DetailView):
 
     def get_object(self, queryset=None):
         self.object = super().get_object(queryset)
-        self.object.views_counter += 1
-        self.object.save()
-        return self.object
+        if self.request.user == self.object.owner:
+            self.object.views_counter += 1
+            self.object.save()
+            return self.object
+        raise PermissionDenied
+
 
 
 class ProductCreateView(CreateView, LoginRequiredMixin):
@@ -66,7 +74,7 @@ class ProductCreateView(CreateView, LoginRequiredMixin):
         return super().form_valid(form)
 
 
-class ProductUpdateView(UpdateView):
+class ProductUpdateView(LoginRequiredMixin, UpdateView):
     model = Product
     form_class = ProductForm
     success_url = reverse_lazy("catalog:catalog_list")
@@ -97,6 +105,18 @@ class ProductUpdateView(UpdateView):
             return self.render_to_response(
                 self.get_context_data(form=form, formset=formset)
             )
+
+    def get_form_class(self):
+        user = self.request.user
+        if user == self.object.owner:
+            return ProductForm
+        if (
+            user.has_perm("catalog.can_edit_category")
+            and user.has_perm("catalog.can_edit_description")
+            and user.has_perm("catalog.can_cancel_publication")
+        ):
+            return ProductModeratorForm
+        raise PermissionDenied("У вас недостаточно прав для редактирования")
 
 
 class ProductDeleteView(DeleteView):

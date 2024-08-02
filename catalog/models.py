@@ -32,7 +32,6 @@ class Product(models.Model):
         null=True,
         related_name="products",
     )
-
     price = models.IntegerField(
         verbose_name="Цена за покупку",
         help_text="Введите цену продукта",
@@ -53,11 +52,17 @@ class Product(models.Model):
     owner = models.ForeignKey(
         User, verbose_name="Создатель", blank=True, null=True, on_delete=models.SET_NULL
     )
+    publication_sign = models.BooleanField(verbose_name="Опубликовано?", default=False)
 
     class Meta:
         verbose_name = "Продукт"
         verbose_name_plural = "Продукты"
         ordering = ["category", "name"]
+        permissions = [
+            ("can_edit_category", "Редактировать категории"),
+            ("can_edit_description", "Редактировать описание продукта"),
+            ("can_cancel_publication", "Отмена публикации продукта"),
+        ]
 
     def __str__(self):
         return self.name
