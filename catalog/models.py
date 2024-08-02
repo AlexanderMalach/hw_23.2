@@ -52,7 +52,9 @@ class Product(models.Model):
     owner = models.ForeignKey(
         User, verbose_name="Создатель", blank=True, null=True, on_delete=models.SET_NULL
     )
-    publication_sign = models.BooleanField(verbose_name="Опубликовано?", default=False)
+    publication_sign = models.BooleanField(
+        verbose_name="Опубликовано?", default=False, help_text="Whether"
+    )
 
     class Meta:
         verbose_name = "Продукт"

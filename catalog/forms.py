@@ -35,7 +35,7 @@ class ProductForm(StyleFormMixin, forms.ModelForm):
             "радар",
         ]
         for ban_name in ban_list_name:
-            if ban_name == cleaned_data:
+            if ban_name in cleaned_data:
                 raise ValidationError("Имя не должно содержать запрещенные слова")
         return cleaned_data
 

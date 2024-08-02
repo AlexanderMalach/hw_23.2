@@ -15,6 +15,7 @@ from django.views.generic import (
 
 from catalog.forms import ProductForm, VersionForm, ProductModeratorForm
 from catalog.models import Product, Blog, Version
+from catalog.services import get_catalog_from_cache
 
 
 def render_home(request):
@@ -28,11 +29,11 @@ def render_contacts(request):
     return render(request, "contacts.html", {"latest_products": latest_products})
 
 
-class ProductListView(ListView):
+class ProductListView(ListView, LoginRequiredMixin):
     model = Product
 
     def get_queryset(self):
-        return Product.objects.filter(publication_sign=True)
+        return get_catalog_from_cache().filter(publication_sign=True)
 
     def get_context_data(self, **kwargs):
         context_data = super().get_context_data(**kwargs)
@@ -48,7 +49,7 @@ class ProductListView(ListView):
         return context_data
 
 
-class ProductDetailView(DetailView):
+class ProductDetailView(DetailView, LoginRequiredMixin):
     model = Product
 
     def get_object(self, queryset=None):
@@ -79,7 +80,7 @@ class ProductCreateView(CreateView, LoginRequiredMixin):
         return super().form_valid(form)
 
 
-class ProductUpdateView(LoginRequiredMixin, UpdateView):
+class ProductUpdateView(UpdateView, LoginRequiredMixin):
     model = Product
     form_class = ProductForm
     success_url = reverse_lazy("catalog:catalog_list")
@@ -129,14 +130,14 @@ class ProductDeleteView(DeleteView):
     success_url = reverse_lazy("catalog:catalog_list")
 
 
-class BlogListView(ListView):
+class BlogListView(LoginRequiredMixin, ListView):
     model = Blog
 
     def get_queryset(self):
         return Blog.objects.filter(publication_sign=True)
 
 
-class BlogDetailView(DetailView):
+class BlogDetailView(LoginRequiredMixin, DetailView):
     model = Blog
 
     def get_object(self, queryset=None):
@@ -146,7 +147,7 @@ class BlogDetailView(DetailView):
         return self.object
 
 
-class BlogCreateView(CreateView):
+class BlogCreateView(LoginRequiredMixin, CreateView):
     model = Blog
     fields = (
         "title",
@@ -165,7 +166,7 @@ class BlogCreateView(CreateView):
         return super().form_valid(form)
 
 
-class BlogUpdateView(UpdateView):
+class BlogUpdateView(LoginRequiredMixin, UpdateView):
     model = Blog
     fields = (
         "title",
@@ -183,6 +184,6 @@ class BlogUpdateView(UpdateView):
         )
 
 
-class BlogDeleteView(DeleteView):
+class BlogDeleteView(LoginRequiredMixin, DeleteView):
     model = Blog
     success_url = reverse_lazy("catalog:blog_list")
